@@ -1,6 +1,11 @@
 # Financial Growth Calculator
 
-A simple, input-driven web app that projects savings, fund balances and total wealth over a user-selected number of years. No country-specific logic, accounts, database or live data feeds.
+A simple, input-driven web app with two tools:
+
+- **Projection** — projects savings, fund balances and total wealth over a user-selected number of years.
+- **Salary growth** — projects monthly income year by year between a low and a high yearly increase estimate.
+
+No country-specific logic, accounts, database or live data feeds.
 
 - [context.md](context.md) — what the app does, inputs, calculation rules and scope.
 - [structure.md](structure.md) — repository layout and responsibilities.
@@ -69,6 +74,24 @@ Covers calculation rules, increments, bonuses, expenses and inflation, mixed fun
 
 - **200**: `{ "assumptions": ..., "summary": ..., "years": [...], "warnings": [...] }` — one `years` entry per projection year; `fund_contributions` and `fund_balances` are arrays parallel to `funds`.
 - **400**: `{ "error": "...", "errors": [{ "field": "income.base_salary", "message": "..." }] }` for malformed JSON or invalid inputs.
+
+### `POST /api/salary` (salary growth tool)
+
+```json
+{
+  "currency": "SGD",
+  "duration_years": 10,
+  "current_income": 5000,
+  "income_frequency": "monthly",
+  "increment_type": "percent",
+  "min_increment": 3,
+  "max_increment": 8
+}
+```
+
+- The yearly increase is entered as a low and a high estimate (`min_increment` / `max_increment`); the projection shows both paths as a range. Equal estimates collapse to a single path.
+- `increment_type` is `percent` (compounds each year) or `fixed` (a money amount entered at the income's frequency, added linearly).
+- **200**: one `years` entry per year with monthly and annual income plus the year-over-year increase, for low and high paths, alongside `assumptions` and `summary`.
 
 ### Calculation conventions
 

@@ -15,6 +15,12 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "api"))
 
 from calculate import process_body  # noqa: E402
+from salary import process_body as salary_process_body  # noqa: E402
+
+ROUTES = {
+    "/api/calculate": process_body,
+    "/api/salary": salary_process_body,
+}
 
 
 class DevHandler(SimpleHTTPRequestHandler):
@@ -22,16 +28,17 @@ class DevHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=ROOT, **kwargs)
 
     def do_POST(self):
-        if self.path.rstrip("/") != "/api/calculate":
+        route = ROUTES.get(self.path.rstrip("/"))
+        if route is None:
             self._send_json(404, {"error": "Not found."})
             return
         length = int(self.headers.get("Content-Length") or 0)
-        status, payload = process_body(self.rfile.read(length))
+        status, payload = route(self.rfile.read(length))
         self._send_json(status, payload)
 
     def do_GET(self):
-        if self.path.rstrip("/") == "/api/calculate":
-            self._send_json(405, {"error": "Use POST for /api/calculate."})
+        if self.path.rstrip("/") in ROUTES:
+            self._send_json(405, {"error": "Use POST for this endpoint."})
             return
         super().do_GET()
 

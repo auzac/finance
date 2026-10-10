@@ -18,9 +18,12 @@ financial-growth-calculator/
 │   └── app.js                 # Form state, dynamic funds, API calls and chart/table rendering
 ├── api/
 │   ├── calculate.py           # Stateless Vercel Python API endpoint: POST /api/calculate
-│   └── projection.py          # Pure financial calculations and domain validation
+│   ├── projection.py          # Pure financial calculations and domain validation
+│   ├── salary.py              # Stateless Vercel Python API endpoint: POST /api/salary
+│   └── salary_growth.py       # Pure salary growth calculations and validation
 └── tests/
-    └── test_projection.py     # Calculation and validation unit tests
+    ├── test_projection.py     # Calculation and validation unit tests
+    └── test_salary_growth.py  # Salary growth calculation and validation unit tests
 ```
 
 No framework, database, application server, or build process is required initially. Add `vercel.json` **only if routing or deployment configuration actually requires it**, and `requirements.txt` **only if Python dependencies are introduced**.
@@ -81,7 +84,7 @@ Optional fields omitted or left blank in the UI should be normalized to zero whe
 
 ## 5. UI Organization
 
-Use a single page with these visible sections, in this order:
+The app hosts multiple tools that share one shell; selecting a tool in the sidebar swaps the main content (and any tool-specific sidebar footer). The **Projection** tool uses these visible sections, in this order:
 
 1. **Income:** salary, salary frequency, effective tax, annual increment.
 2. **Additional income / bonuses:** AWS and performance bonus, each entered as months of gross salary.
