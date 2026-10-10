@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Financial Growth Calculator</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><span>&#9682;</span> GROW</div>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav-item" href="#income">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
+        <span>Income</span>
+      </a>
+      <a class="nav-item" href="#bonuses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 10v4M17.5 10v4"/></svg>
+        <span>Bonuses</span>
+      </a>
+      <a class="nav-item" href="#commitments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 10h18M8 15h5"/></svg>
+        <span>Commitments</span>
+      </a>
+      <a class="nav-item" href="#funds">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 6v12m-4-9h6a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h6"/></svg>
+        <span>Funds</span>
+      </a>
+      <a class="nav-item" href="#projection">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+        <span>Projection</span>
+      </a>
+      <a class="nav-item" href="#results">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 18 9 12l4 3 8-10"/><path d="M16 5h5v5"/></svg>
+        <span>Results</span>
+      </a>
+    </nav>
+    <div class="side-footer">
+      <div class="eyebrow">Projected wealth</div>
+      <div class="side-amount" id="sideWealth">&mdash;</div>
+      <div class="side-stats" id="sideStats" hidden>
+        <div class="side-stat"><span>Take-home / mo</span><strong id="sideNet">&mdash;</strong></div>
+        <div class="side-stat"><span>Commitments / mo</span><strong id="sideCommitments">&mdash;</strong></div>
+        <div class="side-stat"><span>Surplus / mo</span><strong id="sideSurplus">&mdash;</strong></div>
+        <div class="side-stat"><span>Remaining / mo</span><strong id="sideRemaining">&mdash;</strong></div>
+      </div>
+      <div class="profile"><span class="avatar">&#9682;</span><span>Illustrative estimates<br>not financial advice</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="brand-mobile"><span>&#9682;</span> GROW</div>
+      <span class="period" id="periodPill">10-YEAR PROJECTION</span>
+      <div class="top-actions">
+        <div class="currency-wrap" data-field="currency">
+          <select id="currency" class="currency-select" aria-label="Display currency">
+            <option value="USD" selected>USD</option>
+            <option value="SGD">SGD</option>
+            <option value="MYR">MYR</option>
+          </select>
+        </div>
+        <button class="calc-btn" id="calcTop" type="button">Calculate</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="panel" id="income" aria-labelledby="incomeTitle">
+        <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></span><h2 id="incomeTitle">Income</h2><small>Example values &mdash; adjust to your situation</small></div>
+        <div class="fields">
+          <div class="field" data-field="income.base_salary">
+            <label for="salary">Gross salary <span class="cur-code"></span></label>
+            <input id="salary" type="number" min="0" step="any" value="5000" inputmode="decimal" />
+          </div>
+          <div class="field" data-field="income.salary_frequency">
+            <label for="salaryFrequency">Salary frequency</label>
+            <select id="salaryFrequency">
+              <option value="monthly" selected>Monthly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </div>
+          <div class="field" data-field="income.tax_rate_percent">
+            <label for="taxRate">Estimated effective tax (%)</label>
+            <input id="taxRate" type="number" min="0" max="100" step="any" value="10" inputmode="decimal" />
+          </div>
+          <div class="field" data-field="income.increment_type">
+            <label for="incrementType">Salary increment</label>
+            <select id="incrementType">
+              <option value="percent" selected>Percentage per year</option>
+              <option value="fixed">Fixed amount per year</option>
+            </select>
+          </div>
+          <div class="field" data-field="income.increment_value">
+            <label for="incrementValue" id="incrementLabel">Increment value (% per year)</label>
+            <input id="incrementValue" type="number" min="0" step="any" value="3" inputmode="decimal" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="bonuses" aria-labelledby="bonusesTitle">
+        <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 10v4M17.5 10v4"/></svg></span><h2 id="bonusesTitle">Additional income / bonuses</h2><small>Paid once a year, as months of that year&rsquo;s gross salary</small></div>
+        <div class="fields">
+          <div class="field" data-field="income.aws_months">
+            <label for="awsMonths">AWS (months of gross salary)</label>
+            <input id="awsMonths" type="number" min="0" step="any" value="1" inputmode="decimal" />
+          </div>
+          <div class="field" data-field="income.performance_bonus_months">
+            <label for="performanceBonusMonths">Performance bonus (months of gross salary)</label>
+            <input id="performanceBonusMonths" type="number" min="0" step="any" inputmode="decimal" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="commitments" aria-labelledby="commitmentsTitle">
+        <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 10h18M8 15h5"/></svg></span><h2 id="commitmentsTitle">Expenses &amp; commitments</h2><small id="expenseTotal">Total monthly: &mdash;</small></div>
+        <div class="row-list" id="expenseList"></div>
+        <button class="add" id="addExpense" type="button">+ Add commitment</button>
+        <div class="fields tight">
+          <div class="field" data-field="expenses.annual_inflation_percent">
+            <label for="inflation">Annual expense inflation (%)</label>
+            <input id="inflation" type="number" min="0" max="100" step="any" value="2" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="live-strip" id="surplusStrip" hidden>
+          <span>Take-home after tax <strong id="stripNet">&mdash;</strong></span>
+          <span>Commitments <strong id="stripCommitments">&mdash;</strong></span>
+          <span>Surplus <strong id="stripSurplus">&mdash;</strong></span>
+        </div>
+      </section>
+
+      <section class="panel" id="funds" aria-labelledby="fundsTitle">
+        <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 6v12m-4-9h6a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h6"/></svg></span><h2 id="fundsTitle">Savings &amp; funds</h2><small>Contributions come from monthly surplus after tax and commitments</small></div>
+        <div class="row-list" id="fundList"></div>
+        <button class="add" id="addFund" type="button">+ Add fund</button>
+        <div class="note" id="fundsNote" hidden></div>
+        <div class="live-strip" id="fundsStrip" hidden>
+          <span>Remaining after fund allocations <strong id="stripRemaining">&mdash;</strong></span>
+        </div>
+      </section>
+
+      <section class="panel" id="projection" aria-labelledby="projectionTitle">
+        <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></span><h2 id="projectionTitle">Projection settings</h2><small>Calculations use unrounded values; display is rounded</small></div>
+        <div class="fields">
+          <div class="field" data-field="duration_years">
+            <label for="years">Projection years</label>
+            <input id="years" type="number" min="1" max="60" step="1" value="10" inputmode="numeric" />
+          </div>
+          <div class="field" data-field="starting_cash">
+            <label for="startingCash">Starting unallocated cash <span class="cur-code"></span> (optional)</label>
+            <input id="startingCash" type="number" min="0" step="any" inputmode="decimal" />
+          </div>
+        </div>
+        <button class="calc-btn wide" id="calcMain" type="button">Calculate projection</button>
+        <p class="helper">Estimates only &mdash; not financial advice. Tax is a flat effective rate with no country-specific rules.</p>
+      </section>
+
+      <section class="results" id="results" aria-label="Projection results" aria-live="polite">
+        <div id="errorBanner" class="banner" hidden></div>
+
+        <div id="resultsStatus" class="results-status">Loading your projection&hellip;</div>
+
+        <div id="resultsBody" class="results-body" hidden>
+          <div id="warnings" class="warnings" hidden>
+            <h3>Allocation warnings</h3>
+            <ul></ul>
+          </div>
+
+          <div class="heading">
+            <p>Your projected financial growth over</p>
+            <h1 id="headlineYears">&mdash;</h1>
+            <div class="sub">Savings, fund balances and total wealth</div>
+            <div class="tag" id="headlineRange">Illustrative assumptions &middot; not financial advice</div>
+          </div>
+
+          <section class="insights">
+            <div class="metric"><div class="eyebrow">Projected total wealth</div><h3 id="wealthMetric">&mdash;</h3><p id="wealthMetricSub">End of projection</p></div>
+            <div class="metric"><div class="eyebrow">Monthly net salary</div><h3 id="netMetric">&mdash;</h3><p>Starting year, after effective tax</p></div>
+            <div class="metric"><div class="eyebrow">Monthly surplus</div><h3 id="surplusMetric">&mdash;</h3><p>Net salary minus commitments</p></div>
+            <div class="metric"><div class="eyebrow">Remaining monthly cash</div><h3 id="remainingMetric">&mdash;</h3><p>After fund allocations</p></div>
+          </section>
+
+          <section class="chart-card">
+            <div class="chart-head"><h2>Wealth projection</h2><span>Annual overview</span></div>
+            <div class="plot-wrap"><svg id="projectionChart" role="img" aria-label="Area chart of projected cash, fund balances and total wealth by year"></svg></div>
+            <div class="legend">
+              <span><i class="key" style="color:#3b9d79;background:#60c99e"></i>Unallocated cash</span>
+              <span><i class="key" style="color:#da932e;background:#f3c04d"></i>Fund contributions</span>
+              <span><i class="key" style="color:#5f63d7;background:#8185f2"></i>Investment growth</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="section-title"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><h2>Annual projection</h2><label class="table-range">Show<select id="tableInterval"><option value="1">Every year (full)</option><option value="2">Every 2 years</option><option value="5" selected>Every 5 years</option><option value="10">Every 10 years</option></select></label></div>
+            <div class="table-wrap"><table id="resultTable"></table></div>
+          </section>
+        </div>
+      </section>
+
+      <div class="footer-note">Projections are estimates, not guaranteed outcomes or financial advice.</div>
+    </div>
+  </main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

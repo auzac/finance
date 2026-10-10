@@ -11,6 +11,8 @@ financial-growth-calculator/
 ├── structure.md               # This document: repository organization
 ├── README.md                  # Local setup, usage and Vercel deployment
 ├── index.html                 # Single-page application markup
+├── dev_server.py              # Local dev server: static files + POST /api/calculate on one origin
+├── conftest.py                # Adds api/ to sys.path for pytest
 ├── assets/
 │   ├── styles.css             # Responsive layout and visual styles
 │   └── app.js                 # Form state, dynamic funds, API calls and chart/table rendering
@@ -52,7 +54,8 @@ Use one JSON request and one JSON response. Maintain consistent names across fro
     "tax_rate_percent": 0,
     "increment_type": "percent",
     "increment_value": 0,
-    "annual_bonuses": [0, 0, 0]
+    "aws_months": 1,
+    "performance_bonus_months": 0
   },
   "expenses": {
     "annual_inflation_percent": 0,
@@ -80,13 +83,14 @@ Optional fields omitted or left blank in the UI should be normalized to zero whe
 
 Use a single page with these visible sections, in this order:
 
-1. **Income:** salary, salary frequency, effective tax, annual increment, three optional annual bonuses.
-2. **Expenses & commitments:** editable list of monthly items; annual expense inflation.
-3. **Funds:** `+ Add Fund`; each entry has name, fixed/percentage allocation, starting balance, optional annual return; edit/remove.
-4. **Projection settings:** years, currency, starting unallocated cash.
-5. **Results:** validation messages, headline totals, annual projection table and one trend chart.
+1. **Income:** salary, salary frequency, effective tax, annual increment.
+2. **Additional income / bonuses:** AWS and performance bonus, each entered as months of gross salary.
+3. **Expenses & commitments:** editable list of monthly items; annual expense inflation.
+4. **Funds:** `+ Add Fund`; each entry has name, fixed/percentage allocation, starting balance, optional annual return; edit/remove.
+5. **Projection settings:** years, starting unallocated cash. Display currency (USD/SGD/MYR) lives in the top bar.
+6. **Results:** validation messages, headline totals, annual projection table and one trend chart.
 
-Use native accessible form controls and labels. Recalculate on a clear **Calculate** action first; live recalculation can be added later if straightforward. Hide or mark results as stale when inputs change before recalculation.
+Use native accessible form controls and labels. Recalculate automatically (debounced) as inputs change, with a clear **Calculate** button as a manual fallback; live recalculation failures stay quiet while results are already on screen. Keep a live monthly take-home / surplus indicator beside the commitments and funds sections so commitments and allocations can be seen crossing take-home pay immediately.
 
 ## 6. Calculation and Validation Discipline
 
@@ -114,7 +118,7 @@ Use native accessible form controls and labels. Recalculate on a clear **Calcula
 ## 8. Local Development and Deployment
 
 - Work locally in VS Code; use Git/GitHub as the source repository.
-- Serve the frontend over HTTP during development; the browser calls `/api/calculate` on the same origin in deployment. If local frontend/API servers use different ports, use a local proxy or documented configuration; do not hard-code production URLs.
+- Serve the frontend over HTTP during development (`python dev_server.py` serves the static files and `/api/calculate` from the same origin); the browser calls `/api/calculate` on the same origin in deployment. Do not hard-code production URLs.
 - Keep the endpoint compatible with Vercel's supported Python Functions conventions (verify during implementation).
 - Deploy through GitHub → Vercel after local calculations and API response shape have been verified.
 - Do not store user financial inputs on the server. No account system or database is needed.

@@ -1,0 +1,10 @@
+# Local design references (not part of the application)
+financial-growth-ui-sample.html
+sample.jpg
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/

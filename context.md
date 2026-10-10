@@ -29,11 +29,10 @@ Build a simple, input-driven web application that projects an individual's savin
 | Base salary | Required, nonnegative; input frequency monthly or annual |
 | Estimated tax rate | User-entered effective percentage; used to estimate net income |
 | Salary increment | Percentage or fixed monetary increase, applied annually |
-| Bonus 1 | Optional annual amount; blank = 0 |
-| Bonus 2 | Optional annual amount; blank = 0 |
-| Bonus 3 | Optional annual amount; blank = 0 |
+| AWS | Optional; entered as months of gross salary; blank = 0 |
+| Performance bonus | Optional; entered as months of gross salary; blank = 0 |
 
-Bonuses are **annual income**, not recurring monthly salary. Version 1 treats bonus amounts as gross and applies the same effective tax rate. Net salary is calculated, not manually entered.
+Bonuses are **annual income**, not recurring monthly salary, and are entered as months of gross salary, so they follow the salary increment. They are treated as gross and taxed at the same effective tax rate. Net salary is calculated, not manually entered.
 
 ### Expenses and Commitments
 - User-defined fixed monthly expense/commitment entries (name + amount); allow add/edit/remove.
@@ -62,12 +61,12 @@ For each projection year `y`:
 4. Calculate `monthly_surplus = net_monthly_salary − total_monthly_expenses`.
 5. Each percentage-based fund receives `monthly_surplus × allocation_percentage`; each fixed fund receives its entered monthly amount.
 6. Calculate `remaining_monthly_cash = monthly_surplus − sum(monthly_fund_contributions)`.
-7. Calculate net annual bonuses as `(bonus_1 + bonus_2 + bonus_3) × (1 − tax_rate)`; add these separately to annual unallocated cash.
+7. Calculate net annual bonuses as `(AWS months + performance bonus months) × gross monthly salary × (1 − tax_rate)`; add these separately to annual unallocated cash.
 8. Accumulate annual fund contributions into their respective balances, applying any optional investment return under **one documented, consistent annual timing convention**.
 9. Accumulate any remaining cash (including net annual bonuses) in the unallocated cash balance.
 10. Calculate total wealth as `unallocated_cash_balance + sum(all_fund_balances)`; do not count fund contributions twice.
 
-For a fixed salary increment, the entered monetary amount is applied at the **same frequency as the base salary input** (monthly or annual), then normalized for the calculation. Percentage increments use the prior year's salary. Bonuses remain constant annually in Version 1 unless later explicitly scoped otherwise.
+For a fixed salary increment, the entered monetary amount is applied at the **same frequency as the base salary input** (monthly or annual), then normalized for the calculation. Percentage increments use the prior year's salary. Bonuses are multiples of the year's gross salary, so they grow with the annual increment.
 
 Annual results are the required reporting frequency. Monthly cash flow may be used internally to calculate annual contributions; do not add monthly reporting UI to Version 1.
 
